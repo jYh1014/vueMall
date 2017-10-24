@@ -3,9 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+import vueLazyLoad from 'vue-lazyload'
 Vue.config.productionTip = false
-
+Vue.use(vueLazyLoad,{
+  loading:'../static/loading-svg'
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
