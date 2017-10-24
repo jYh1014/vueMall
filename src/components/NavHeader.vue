@@ -23,7 +23,7 @@
         <div class="navbar">
             <div class="navbar-left-container">
               <a href="/">
-                <img class="navbar-brand-logo" src="/static/logo.png">
+                <img class="navbar-brand-logo" src="/static/center.jpeg">
               </a>
             </div>
             <div class="navbar-right-container" style="display: flex;">
@@ -69,7 +69,8 @@
     margin-left: -20px;
   }
   .navbar-brand-logo {
-    /*width: 120px;*/
+    width: 120px;
+    height:70px
   }
   .header a, .footer a {
     color: #666;

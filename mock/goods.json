@@ -1,0 +1,24 @@
+{
+    "status":"0",
+    "msg":"",
+    "result":[
+        {
+            "productId":"1000",
+            "productName":"iphone 5",
+            "productPrice":"3000",
+            "productImg":"1.jpg"
+        },
+        {
+            "productId":"1001",
+            "productName":"iphone 6",
+            "productPrice":"4000",
+            "productImg":"2.jpg"
+        },
+        {
+            "productId":"1002",
+            "productName":"iphone 7",
+            "productPrice":"5000",
+            "productImg":"3.jpg"
+        }
+    ]
+}

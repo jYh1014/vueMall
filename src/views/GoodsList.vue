@@ -19,7 +19,7 @@
                 <dt>Price:</dt>
                 <dd><a href="javascript:void(0)"  >All</a></dd>
                 <dd >
-                  <a href="javascript:void(0)" ></a>
+                  <a href="javascript:void(0)" >0-100</a>
                 </dd>
               </dl>
             </div>
@@ -28,13 +28,13 @@
             <div class="accessory-list-wrap">
               <div class="accessory-list col-4">
                 <ul>
-                  <li>
+                  <li v-for="item in goodsList">
                     <div class="pic">
-                      <a href="#"><img alt="" src="../../static/1.jpg"></a>
+                      <a href="#"><img alt="" :src="'/static/'+item.productImg"></a>
                     </div>
                     <div class="main">
-                      <div class="name"></div>
-                      <div class="price"></div>
+                      <div class="name">{{item.productName}}</div>
+                      <div class="price">{{item.productPrice}}</div>
                       <div class="btn-area">
                         <a href="javascript:;" class="btn btn--m" >加入购物车</a>
                       </div>
@@ -62,10 +62,27 @@ import '../assets/css/product.css'
 import NavHeader from '../components/NavHeader'
 import NavFooter from '../components/NavFooter'
 import NavBread from '../components/NavBread'
+import axios from 'axios'
 export default {
   name: 'GoodsList',
+  data(){
+    return {
+      goodsList:[]
+    }
+  },
   components:{
       NavHeader,NavFooter,NavBread
+  },
+  mounted(){
+      this.getGoodsList()
+  },
+  methods:{
+      getGoodsList(){
+          axios.get('/goods')
+          .then(res => {
+              this.goodsList = res.data.result
+          })
+      }
   }
 }
 </script>
