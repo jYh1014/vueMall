@@ -23,9 +23,10 @@ const proxyTable = config.dev.proxyTable
 
 const app = express()
 //定义服务端路由
-const router = express.Router();
+// const router = express.Router();
 let goodsData = require('../mock/goods.json')
 app.get('/goods',(req,res,next) => {
+  console.log(res)
   res.send(goodsData)
 })
 // app.use(router)
