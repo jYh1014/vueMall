@@ -60,6 +60,7 @@
 <script>
 import '../assets/css/base.css'
 import '../assets/css/product.css'
+import '../assets/css/base.styl'
 import NavHeader from '../components/NavHeader'
 import NavFooter from '../components/NavFooter'
 import NavBread from '../components/NavBread'
@@ -117,6 +118,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="stylus">
+  
 </style>
