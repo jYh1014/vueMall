@@ -21,7 +21,7 @@ router.get('/',function(req,res,next){
     let pageSize = parseInt(req.param('pageSize'))//每页数据总数量
     let sort = parseInt(req.param('sort'))//设置升降序
     let skip = parseInt((page - 1)*pageSize)//跳过的数据总数
-    let goodsModel = Goods.find({}).skip(skip).limit(pageSize).sort({'salePrice':sort})
+    let goodsModel = Goods.find({}).sort({'salePrice':sort}).skip(skip).limit(pageSize)
     goodsModel.exec(function(err,doc){
         console.log(doc)
         if(err){

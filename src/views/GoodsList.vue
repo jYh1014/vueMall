@@ -9,7 +9,7 @@
           <div class="filter-nav">
             <span class="sortby">Sort by:</span>
             <a href="javascript:void(0)" class="default cur">Default</a>
-            <a href="javascript:void(0)" class="price" >Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+            <a href="javascript:void(0)" class="price" @click="sortGoods">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
             <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
           </div>
           <div class="accessory-result">
@@ -28,7 +28,7 @@
             <div class="accessory-list-wrap">
               <div class="accessory-list col-4">
                 <ul>
-                  <li v-for="item in goodsList.list" :key="item.productId">
+                  <li v-for="item in goodsList" :key="item.productId">
                     <div class="pic">
                       <a href="#"><img alt="" v-lazy="'/static/'+item.productImage"></a>
                     </div>
@@ -41,6 +41,9 @@
                     </div>
                   </li>
                 </ul>
+                <div class="loadmore" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+                  加载中...
+                </div>
               </div>
               <!-- <div class="view-more-normal"
                    v-infinite-scroll="loadMore"
@@ -73,6 +76,10 @@ export default {
       priceChecked:'all',
       filterby:false,
       overLayFlag:false,
+      sortflag:true,
+      page:1,
+      pageSize:4,
+      busy:true,
       priceFilter:[
         {
           startPrice:0.00,
@@ -96,17 +103,49 @@ export default {
       this.getGoodsList()
   },
   methods:{
-      getGoodsList(){
-          axios.get('/goods')
-          .then(res => {
-            console.log(res)
+    
+      getGoodsList(flag){
+        let param = {
+        page:this.page,
+        pageSize:this.pageSize,
+        sort:this.sortflag?1:-1
+      }
+      
+          axios.get('/goods',{
+            params:param
+          })
+          .then(res => {          
             if(res.data.status == '0'){
-              this.goodsList = res.data.result
+              if(flag){
+                this.goodsList = this.goodsList.concat(res.data.result.list)
+                if(res.data.result.count < this.pageSize){
+                  this.busy = true
+                }else{
+                  this.busy = false
+                }
+                
+              }else{
+                this.goodsList = res.data.result.list
+                this.busy = false
+              }
+              
             }else{
               this.goodsList =[]
             }
               
           })
+      },
+      sortGoods(){
+        this.sortflag = !this.sortflag
+        this.page = 1
+        this.getGoodsList()
+      },
+      loadMore() {
+        this.busy = true
+        setTimeout(() => {
+          this.page ++
+          this.getGoodsList(true)
+        }, 500);
       },
       setPriceFilter(index){
         this.priceChecked = index
@@ -125,5 +164,8 @@ export default {
 </script>
 
 <style lang="stylus">
-  
+  .loadmore
+      text-align center
+      height 100px
+      line-height 100px
 </style>

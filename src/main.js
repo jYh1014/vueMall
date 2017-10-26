@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import vueLazyLoad from 'vue-lazyload'
+import infiniteScroll from 'vue-infinite-scroll'
+Vue.use(infiniteScroll)
 Vue.config.productionTip = false
 Vue.use(vueLazyLoad,{
   loading:'../static/loading-svg'
