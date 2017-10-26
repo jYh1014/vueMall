@@ -36,7 +36,7 @@
                       <div class="name">{{item.productName}}</div>
                       <div class="price">{{item.salePrice}}</div>
                       <div class="btn-area">
-                        <a href="javascript:;" class="btn btn--m" >加入购物车</a>
+                        <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                       </div>
                     </div>
                   </li>
@@ -121,7 +121,7 @@ export default {
             params:param
           })
           .then(res => {  
-            this.loading = true        
+            this.loading = false        
             if(res.data.status == '0'){
               if(flag){
                 this.goodsList = this.goodsList.concat(res.data.result.list)
@@ -141,6 +141,16 @@ export default {
             }
               
           })
+      },
+      addCart(productId){
+        axios.post('/goods/addCart',{productId:productId}).then(res => {
+          // console.log(res.data)
+          if(res.data.status == 0){
+            alert('加入成功')
+          }else{
+            alert('加入失败')
+          }
+        })
       },
       sortGoods(){
         this.sortflag = !this.sortflag

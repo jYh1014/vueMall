@@ -1,7 +1,9 @@
 let express = require('express')
 let router = express.Router()
 let mongoose = require('mongoose')
+mongoose.Promise = require('bluebird')
 let Goods = require('../models/goods')
+let User = require('../models/user')
 
 mongoose.connect('mongodb://127.0.0.1:27017/db_mall')
 mongoose.connection.on('connected',function(){
@@ -16,6 +18,7 @@ mongoose.connection.on('error',function(){
     console.log('connect fail')
 })
 
+//查询商品数据
 router.get('/',function(req,res,next){
     
     let page = parseInt(req.param('page'))//当前页码
@@ -42,26 +45,118 @@ router.get('/',function(req,res,next){
         }
     }
     
-    let goodsModel = Goods.find(params).sort({'salePrice':sort}).skip(skip).limit(pageSize)
-    goodsModel.exec(function(err,doc){
+    let goodsModel = Goods.find(params).sort({'salePrice':sort}).skip(skip).limit(pageSize).exec()
+    // goodsModel.exec(function(err,doc){
         
-        if(err){
+    //     if(err){
+    //         res.json({
+    //             status:'1',
+    //             msg:err.message
+    //         })
+    //     }else{
+    //         res.json({
+    //             status:'0',
+    //             msg:'',
+    //             result:{
+    //                 count:doc.length,
+    //                 list:doc
+    //             }
+    //         })
+    //     }
+
+    // })
+    goodsModel.then((response) => {
+        
+        if(!response){
             res.json({
                 status:'1',
-                msg:err.message
+                msg:response.message
             })
         }else{
             res.json({
                 status:'0',
                 msg:'',
                 result:{
-                    count:doc.length,
-                    list:doc
+                    count:response.length,
+                    list:response
                 }
             })
+        
         }
-
     })
-    // res.send('goodslist')
+})
+
+//加入购物车
+
+router.post('/addCart',function(req,res,next){
+    
+    let userId = '100000077'
+    let productId = req.body.productId
+    User.findOne({userId:userId}).exec()
+        .then((response) => {
+            // console.log(response)
+            if(!response){
+                res.json({
+                    status:'1',
+                    msg:response.message
+                })
+            }else{
+                let goodsItem = ''
+                response.cartList.forEach(item => {
+                    if(item.productId == productId){
+                        goodsItem = item
+                        item.productNum ++
+                        
+                    }
+                })
+                if(goodsItem){
+                    response.save().then(result => {
+                        if(!result){
+                            res.json({
+                                status:'1',
+                                msg:result.message
+                            })
+                        }else{
+                            res.json({
+                                status:'0',
+                                msg:'',
+                                result:{
+                                    count:result.length,
+                                    list:result
+                                }
+                            })
+                        
+                        }
+                    })
+                }else{
+                    Goods.findOne({productId:productId}).exec()
+                        .then(result => {
+                            console.log(result)
+                            result.productNum = 1
+                            result.checked = 1
+                            response.cartList.push(result)
+                            // console.log(response)
+                            response.save().then(response1 => {
+                                if(!response1){
+                                    res.json({
+                                        status:'1',
+                                        msg:response1.message
+                                    })
+                                }else{
+                                    res.json({
+                                        status:'0',
+                                        msg:'',
+                                        result:{
+                                            count:response1.length,
+                                            list:response1
+                                        }
+                                    })
+                                
+                                }
+                            })
+                        })
+                }
+            }
+        })
 })
 module.exports = router
