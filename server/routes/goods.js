@@ -1,7 +1,7 @@
-var express = require('express')
-var router = express.Router()
-var mongoose = require('mongoose')
-var Goods = require('../models/goods')
+let express = require('express')
+let router = express.Router()
+let mongoose = require('mongoose')
+let Goods = require('../models/goods')
 
 mongoose.connect('mongodb://127.0.0.1:27017/db_mall')
 mongoose.connection.on('connected',function(){
@@ -17,7 +17,13 @@ mongoose.connection.on('error',function(){
 })
 
 router.get('/',function(req,res,next){
-    Goods.find({},function(err,doc){
+    let page = parseInt(req.param('page'))//当前页码
+    let pageSize = parseInt(req.param('pageSize'))//每页数据总数量
+    let sort = parseInt(req.param('sort'))//设置升降序
+    let skip = parseInt((page - 1)*pageSize)//跳过的数据总数
+    let goodsModel = Goods.find({}).skip(skip).limit(pageSize).sort({'salePrice':sort})
+    goodsModel.exec(function(err,doc){
+        console.log(doc)
         if(err){
             res.json({
                 status:'1',
