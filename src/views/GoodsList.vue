@@ -45,17 +45,13 @@
                   <img src="../assets/loading-spinning-bubbles.svg" v-show="loading">
                 </div>
               </div>
-              <!-- <div class="view-more-normal"
-                   v-infinite-scroll="loadMore"
-                   infinite-scroll-disabled="busy"
-                   infinite-scroll-distance="20">
-                <img src="./../assets/loading-spinning-bubbles.svg" >
-              </div> -->
+              
             </div>
           </div>
         </div>
       </div>
-      <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
+       
+      <div class="md-overlay" v-show="overLayFlag" ></div>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -64,6 +60,7 @@
 import '../assets/css/base.css'
 import '../assets/css/product.css'
 import '../assets/css/base.styl'
+import '../assets/css/login.css'
 import NavHeader from '../components/NavHeader'
 import NavFooter from '../components/NavFooter'
 import NavBread from '../components/NavBread'
@@ -144,7 +141,7 @@ export default {
       },
       addCart(productId){
         axios.post('/goods/addCart',{productId:productId}).then(res => {
-          // console.log(res.data)
+          
           if(res.data.status == 0){
             alert('加入成功')
           }else{
@@ -177,7 +174,8 @@ export default {
       closePop(){
         this.overLayFlag = false
         this.filterby = false
-      }
+      },
+      
   }
 }
 </script>
