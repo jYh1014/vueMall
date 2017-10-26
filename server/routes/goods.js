@@ -17,13 +17,34 @@ mongoose.connection.on('error',function(){
 })
 
 router.get('/',function(req,res,next){
+    
     let page = parseInt(req.param('page'))//当前页码
     let pageSize = parseInt(req.param('pageSize'))//每页数据总数量
     let sort = parseInt(req.param('sort'))//设置升降序
     let skip = parseInt((page - 1)*pageSize)//跳过的数据总数
-    let goodsModel = Goods.find({}).sort({'salePrice':sort}).skip(skip).limit(pageSize)
+    let priceLevel = req.param('priceLevel')//价格区间
+    let priceGt = ''
+    let priceLte = ''
+    let params = {}
+    if(priceLevel != 'all'){
+        switch (priceLevel){
+            case '0':priceGt = 0;priceLte = 100;break;
+            case '1':priceGt = 100;priceLte = 500;break;
+            case '2':priceGt = 500;priceLte = 1000;break;
+            case '3':priceGt = 1000;priceLte = 5000;break;
+            
+        }
+        params = {
+            salePrice:{
+                $gt:priceGt,
+                $lte:priceLte
+            }
+        }
+    }
+    
+    let goodsModel = Goods.find(params).sort({'salePrice':sort}).skip(skip).limit(pageSize)
     goodsModel.exec(function(err,doc){
-        console.log(doc)
+        
         if(err){
             res.json({
                 status:'1',
