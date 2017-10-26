@@ -17,6 +17,24 @@ mongoose.connection.on('error',function(){
 })
 
 router.get('/',function(req,res,next){
-    res.send('goodslist')
+    Goods.find({},function(err,doc){
+        if(err){
+            res.json({
+                status:'1',
+                msg:err.message
+            })
+        }else{
+            res.json({
+                status:'0',
+                msg:'',
+                result:{
+                    count:doc.length,
+                    list:doc
+                }
+            })
+        }
+
+    })
+    // res.send('goodslist')
 })
 module.exports = router

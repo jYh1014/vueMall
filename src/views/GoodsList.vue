@@ -28,13 +28,13 @@
             <div class="accessory-list-wrap">
               <div class="accessory-list col-4">
                 <ul>
-                  <li v-for="item in goodsList" :key="item.productId">
+                  <li v-for="item in goodsList.list" :key="item.productId">
                     <div class="pic">
-                      <a href="#"><img alt="" v-lazy="'/static/'+item.productImg"></a>
+                      <a href="#"><img alt="" v-lazy="'/static/'+item.productImage"></a>
                     </div>
                     <div class="main">
                       <div class="name">{{item.productName}}</div>
-                      <div class="price">{{item.productPrice}}</div>
+                      <div class="price">{{item.salePrice}}</div>
                       <div class="btn-area">
                         <a href="javascript:;" class="btn btn--m" >加入购物车</a>
                       </div>
@@ -99,7 +99,13 @@ export default {
       getGoodsList(){
           axios.get('/goods')
           .then(res => {
+            console.log(res)
+            if(res.data.status == '0'){
               this.goodsList = res.data.result
+            }else{
+              this.goodsList =[]
+            }
+              
           })
       },
       setPriceFilter(index){
