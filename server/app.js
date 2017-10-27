@@ -25,6 +25,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//拦截用户未登录
+app.use(function(req,res,next){
+  console.log(req.cookies.userId)
+  if(req.cookies.userId){
+    
+    next()
+  }else{
+    // console.log(req.path)
+    if(req.originalUrl == '/users/login' || req.originalUrl == '/users/logout' || req.originalUrl.indexOf('/goods/list') >-1){
+      next()
+    }else{
+      res.json({
+        status:'10001',
+        msg:'用户未登录',
+        result:'失败'
+      })
+    }
+  }
+})
+
 app.use('/', index);
 app.use('/users', users);
 app.use('/goods', goods);

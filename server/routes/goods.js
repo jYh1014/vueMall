@@ -19,7 +19,7 @@ mongoose.connection.on('error',function(){
 })
 
 //查询商品数据
-router.get('/',function(req,res,next){
+router.get('/list',function(req,res,next){
     
     let page = parseInt(req.param('page'))//当前页码
     let pageSize = parseInt(req.param('pageSize'))//每页数据总数量
@@ -52,7 +52,7 @@ router.get('/',function(req,res,next){
         if(!response){
             res.json({
                 status:'1',
-                
+                result:'失败'
             })
         }else{
             res.json({
@@ -83,7 +83,7 @@ router.post('/addCart',function(req,res,next){
             if(!response){
                 res.json({
                     status:'1',
-                   
+                    result:'失败'
                 })
             }else{
                 let goodsItem = ''
@@ -98,7 +98,7 @@ router.post('/addCart',function(req,res,next){
                         if(!result){
                             res.json({
                                 status:'1',
-                                
+                                result:'失败'
                             })
                         }else{
                             res.json({
@@ -124,7 +124,7 @@ router.post('/addCart',function(req,res,next){
                                 if(!response1){
                                     res.json({
                                         status:'1',
-                                        
+                                        result:'失败'
                                     })
                                 }else{
                                     res.json({

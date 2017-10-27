@@ -114,7 +114,7 @@ export default {
           priceLevel:this.priceChecked
         }
         this.loading = true
-          axios.get('/goods',{
+          axios.get('/goods/list',{
             params:param
           })
           .then(res => {  
@@ -145,7 +145,7 @@ export default {
           if(res.data.status == 0){
             alert('加入成功')
           }else{
-            alert('加入失败')
+            alert(res.data.result)
           }
         })
       },
