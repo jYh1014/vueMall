@@ -46,31 +46,13 @@ router.get('/',function(req,res,next){
     }
     
     let goodsModel = Goods.find(params).sort({'salePrice':sort}).skip(skip).limit(pageSize).exec()
-    // goodsModel.exec(function(err,doc){
-        
-    //     if(err){
-    //         res.json({
-    //             status:'1',
-    //             msg:err.message
-    //         })
-    //     }else{
-    //         res.json({
-    //             status:'0',
-    //             msg:'',
-    //             result:{
-    //                 count:doc.length,
-    //                 list:doc
-    //             }
-    //         })
-    //     }
-
-    // })
+    
     goodsModel.then((response) => {
         
         if(!response){
             res.json({
                 status:'1',
-                msg:response.message
+                
             })
         }else{
             res.json({
@@ -84,6 +66,9 @@ router.get('/',function(req,res,next){
         
         }
     })
+    .catch((err) => {
+        console.log(err);
+      })
 })
 
 //加入购物车
@@ -98,15 +83,14 @@ router.post('/addCart',function(req,res,next){
             if(!response){
                 res.json({
                     status:'1',
-                    msg:response.message
+                   
                 })
             }else{
                 let goodsItem = ''
                 response.cartList.forEach(item => {
                     if(item.productId == productId){
                         goodsItem = item
-                        item.productNum ++
-                        
+                        item.productNum ++                     
                     }
                 })
                 if(goodsItem){
@@ -114,7 +98,7 @@ router.post('/addCart',function(req,res,next){
                         if(!result){
                             res.json({
                                 status:'1',
-                                msg:result.message
+                                
                             })
                         }else{
                             res.json({
@@ -140,7 +124,7 @@ router.post('/addCart',function(req,res,next){
                                 if(!response1){
                                     res.json({
                                         status:'1',
-                                        msg:response1.message
+                                        
                                     })
                                 }else{
                                     res.json({
@@ -154,9 +138,15 @@ router.post('/addCart',function(req,res,next){
                                 
                                 }
                             })
+                            .catch((err) => {
+                                console.log(err);
+                              })
                         })
                 }
             }
         })
+        .catch((err) => {
+            console.log(err);
+          })
 })
 module.exports = router
