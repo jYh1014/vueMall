@@ -115,11 +115,10 @@ router.post('/addCart',function(req,res,next){
                 }else{
                     Goods.findOne({productId:productId}).exec()
                         .then(result => {
-                            console.log(result)
+                            
                             result.productNum = 1
                             result.checked = 1
                             response.cartList.push(result)
-                            // console.log(response)
                             response.save().then(response1 => {
                                 if(!response1){
                                     res.json({

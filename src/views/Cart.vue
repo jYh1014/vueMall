@@ -59,7 +59,7 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li >
+              <li v-for="(item,index) in cartList" :key="index">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
                     <a href="javascipt:;" class="checkbox-btn item-check-btn" >
@@ -69,32 +69,32 @@
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img >
+                    <img :src="'/static/'+item.productImage" :alt="item.productImage">
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name"></div>
+                    <div class="item-name">{{item.productName}}</div>
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price"></div>
+                  <div class="item-price">{{item.salePrice}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
                         <a class="input-sub" >-</a>
-                        <span class="select-ipt"></span>
+                        <span class="select-ipt">{{item.productNum}}</span>
                         <a class="input-add" >+</a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total"></div>
+                  <div class="item-price-total">{{item.productNum*item.salePrice}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn" >
+                    <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item.productId)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -129,11 +129,11 @@
         </div>
       </div>
     </div>
-    <Modal >
+    <Modal :mdShow="modalConfirm" :close="closeModal">
       <p slot="message">你确认要删除此条数据吗?</p>
       <div slot="btnGroup">
-        <a class="btn btn--m" href="javascript:;" >确认</a>
-        <a class="btn btn--m btn--red" href="javascript:;" >关闭</a>
+        <a class="btn btn--m" href="javascript:;" @click="delCart">确认</a>
+        <a class="btn btn--m btn--red" href="javascript:;" @click="modalConfirm = false">关闭</a>
       </div>
     </Modal>
     <nav-footer></nav-footer>
@@ -174,11 +174,13 @@
         name:'Cart',
         data(){
             return{
-                
+                cartList:[],
+                modalConfirm:false,
+                productId:''
             }
         },
         mounted(){
-            
+            this.init()
         },
         
         computed:{
@@ -191,7 +193,28 @@
           Modal
         },
         methods:{
-
+            init(){
+              axios.get('/users/cartList').then(response => {
+                  if(response.data.status == 0){
+                      this.cartList = response.data.result
+                  }              
+              })
+            },
+            delCart(){
+              axios.post('/users/cartDel',{productId:this.productId}).then(response => {
+                if(response.data.status == 0){
+                  this.modalConfirm = false
+                  this.init()
+                }
+              })
+            },
+            delCartConfirm(productId){
+              this.modalConfirm = true
+              this.productId = productId
+            },
+            closeModal(){
+              this.modalConfirm = false
+            }
         }
     }
 </script>
