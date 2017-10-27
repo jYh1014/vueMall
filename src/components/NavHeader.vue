@@ -160,6 +160,9 @@
               nickName:''
             }
         },
+        mounted(){
+          this.checkLogin()
+        },
         methods:{
           login(){
             console.log(this.userName)
@@ -186,6 +189,13 @@
                 this.nickName = ''
               }
               
+            })
+          },
+          checkLogin(){
+            axios.get('/users/checkLogin').then(res => {
+              if(res.data.status == 0){
+                this.nickName = res.data.result
+              }
             })
           }
         }

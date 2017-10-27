@@ -38,8 +38,7 @@ app.use(function(req,res,next){
     }else{
       res.json({
         status:'10001',
-        msg:'用户未登录',
-        result:'失败'
+        result:'用户未登录'
       })
     }
   }

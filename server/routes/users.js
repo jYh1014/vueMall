@@ -22,6 +22,10 @@ router.post('/login',function(req,res,next){
             path:'/',
             maxAge:1000*60*60
           })
+          res.cookie("userName",response.userName,{
+            path:'/',
+            maxAge:1000*60*60
+          })
           res.json({
             status:0,
             result:{
@@ -49,4 +53,17 @@ router.post("/logout",function(req,res,next){
   })
 })
 
+router.get("/checkLogin",function(req,res,next){
+  if(req.cookies.userId){
+    res.json({
+      status:0,
+      result:req.cookies.userName
+    })
+  }else{
+    res.json({
+      status:1,
+      result:'用户未登录'
+    })
+  }
+})
 module.exports = router;
