@@ -118,8 +118,9 @@ router.post('/cartEdit',function(req,res,next){
   let userId = req.cookies.userId
   let productId = req.body.productId
   let productNum = req.body.productNum
+  let checked = req.body.checked
   User.update({userId:userId,'cartList.productId':productId},{
-    "cartList.$.productNum":productNum
+    "cartList.$.productNum":productNum,"cartList.$.checked":checked
   }).then(response => {
     if(response){
       res.json({
@@ -136,5 +137,38 @@ router.post('/cartEdit',function(req,res,next){
   .catch((err) => {
     console.log(err);
   })
+})
+
+//商品全选
+
+router.post('/editCheckAll',function(req,res,next){
+  let userId = req.cookies.userId
+  let checked = req.body.checkAll?1:0
+  User.findOne({userId:userId}).exec()
+    .then(response => {
+      if(response){
+        response.cartList.forEach(item => {
+          item.checked = checked
+        })
+        response.save().exec()
+          .then(response1 => {
+            if(response1){
+              res.json({
+                status:0,
+                result:'suc'
+              })
+            }else{
+              res.json({
+                status:1,
+                result:'fail'
+              })
+            }
+          })
+        res.json({
+          status:0,
+          result:'suc'
+        })
+      }
+    })
 })
 module.exports = router;
