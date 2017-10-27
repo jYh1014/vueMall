@@ -199,7 +199,9 @@ export default {
         this.filterby = false
       },
       closeModal(){
+        
         this.mdShow = false
+        this.mdShowCart = false
       }
   }
 }
