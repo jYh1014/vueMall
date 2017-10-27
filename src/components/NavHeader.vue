@@ -30,7 +30,7 @@
               <div class="navbar-menu-container">
                 <span class="navbar-link" v-if="nickName">{{this.nickName}}</span>
                 <a href="javascript:void(0)" class="navbar-link"  @click="loginModalFlag=true" v-if="!nickName">Login</a>
-                <a href="javascript:void(0)" class="navbar-link"  @click="loginModalFlag=true" v-if="nickName">Login out</a>
+                <a href="javascript:void(0)" class="navbar-link"  @click="logout" v-if="nickName">Login out</a>
                 <!-- <a href="javascript:void(0)" class="navbar-link" >Logout</a> -->
                 <div class="navbar-cart-container">
                   <span class="navbar-cart-count" ></span>
@@ -178,6 +178,14 @@
               }else{
                 this.errorTip = true
               }
+            })
+          },
+          logout(){
+            axios.post('/users/logout').then(res => {
+              if(res.data.status == 0){
+                this.nickName = ''
+              }
+              
             })
           }
         }
