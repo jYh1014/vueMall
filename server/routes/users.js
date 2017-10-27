@@ -112,4 +112,29 @@ router.post('/cartDel',function(req,res,next){
     console.log(err);
   })
 })
+
+//购物车编辑
+router.post('/cartEdit',function(req,res,next){
+  let userId = req.cookies.userId
+  let productId = req.body.productId
+  let productNum = req.body.productNum
+  User.update({userId:userId,'cartList.productId':productId},{
+    "cartList.$.productNum":productNum
+  }).then(response => {
+    if(response){
+      res.json({
+        status:0,
+        result:'suc'
+      })
+    }else{
+      res.json({
+        status:1,
+        result:'fail'
+      })
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+})
 module.exports = router;
