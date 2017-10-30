@@ -60,7 +60,7 @@
             <div class="addr-list-wrap">
               <div class="addr-list">
                 <ul>
-                  <li  v-for="(item,index) in addressListFilter" :key = "index" :class="{check:checkIndex == index}" @click="checkIndex=index">
+                  <li  v-for="(item,index) in addressListFilter" :key = "index" :class="{check:checkIndex == index}" @click="checkIndex=index;selectedAddrId=item.addressId">
                     <dl>
                       <dt>{{item.userName}}</dt>
                       <dd class="address">{{item.streetName}}</dd>
@@ -116,7 +116,7 @@
               </div>
             </div>
             <div class="next-btn-wrap">
-              <router-link class="btn btn--m btn--red" v-bind:to="{path:'orderConfirm'}">Next</router-link>
+              <router-link class="btn btn--m btn--red" v-bind:to="{path:'orderConfirm',query:{'addressId':selectedAddrId}}">Next</router-link>
             </div>
           </div>
         </div>
@@ -140,6 +140,7 @@
   import NavFooter from './../components/NavFooter'
   import NavBread from './../components/NavBread'
   import Modal from './../components/Modal'
+  import orderConfirm from './OrderConfirm'
   import {currency} from './../util/currency'
   import axios from 'axios'
   export default{
@@ -149,7 +150,8 @@
               limit:3,
               checkIndex:0,
               isMdShow:false,
-              addressId:''
+              addressId:'',
+              selectedAddrId:''
           }
       },
       mounted(){
