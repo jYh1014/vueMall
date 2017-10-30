@@ -171,4 +171,20 @@ router.post('/editCheckAll',function(req,res,next){
       }
     })
 })
+
+//获取地址列表
+router.get('/addressList',function(req,res,next){
+  let userId = req.cookies.userId
+  User.findOne({userId:userId}).exec().then(response => {
+    if(response){
+      res.json({
+        status:0,
+        result:response.addressList
+      })
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+})
 module.exports = router;
