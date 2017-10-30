@@ -60,7 +60,7 @@
             <div class="addr-list-wrap">
               <div class="addr-list">
                 <ul>
-                  <li  v-for="(item,index) in addressList" :key = "index">
+                  <li  v-for="(item,index) in addressListFilter" :key = "index" :class="{check:checkIndex == index}" @click="checkIndex=index">
                     <dl>
                       <dt>{{item.userName}}</dt>
                       <dd class="address">{{item.streetName}}</dd>
@@ -72,9 +72,9 @@
                       </a>
                     </div>
                     <div class="addr-opration addr-set-default">
-                      <a href="javascript:;" class="addr-set-default-btn" ><i>Set default</i></a>
+                      <a href="javascript:;" class="addr-set-default-btn" v-if="!item.isDefault" @click="setDefault(item.addressId)"><i>Set default</i></a>
                     </div>
-                    <div class="addr-opration addr-default" >Default address</div>
+                    <div class="addr-opration addr-default" v-if="item.isDefault">Default address</div>
                   </li>
                   <li class="addr-new">
                     <div class="add-new-inner">
@@ -88,7 +88,7 @@
               </div>
 
               <div class="shipping-addr-more">
-                <a class="addr-more-btn up-down-btn" href="javascript:;" >
+                <a class="addr-more-btn up-down-btn" href="javascript:;" @click="expand" :class="{open:limit>3}">
                   more
                   <i class="i-up-down">
                     <i class="i-up-down-l"></i>
@@ -145,14 +145,18 @@
   export default{
       data(){
           return{
-              addressList:[]
+              addressList:[],
+              limit:3,
+              checkIndex:0
           }
       },
       mounted(){
          this.init()
       },
       computed:{
-          
+          addressListFilter(){
+              return this.addressList.slice(0,this.limit)
+          }
       },
       components:{
         NavHeader,
@@ -165,6 +169,20 @@
               axios.get('/users/addressList').then(res => {
                   if(res.data.status == 0){
                       this.addressList = res.data.result
+                  }
+              })
+          },
+          expand(){
+              if(this.limit == 3){
+                  this.limit = this.addressList.length
+              }else{
+                  this.limit = 3
+              }
+          },
+          setDefault(addressId){
+              axios.post('/users/setDefault',{addressId:addressId}).then(res => {
+                  if(res.data.status == 0){
+                      this.init()
                   }
               })
           }
