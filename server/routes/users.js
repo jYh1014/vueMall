@@ -1,6 +1,7 @@
 var express = require('express');
 let mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
+require('../util/util')
 var router = express.Router();
 let User = require('../models/user')
 
@@ -119,9 +120,10 @@ router.post('/cartEdit',function(req,res,next){
   let productId = req.body.productId
   let productNum = req.body.productNum
   let checked = req.body.checked
+  
   User.update({userId:userId,'cartList.productId':productId},{
     "cartList.$.productNum":productNum,"cartList.$.checked":checked
-  }).then(response => {
+  }).exec().then(response => {
     if(response){
       res.json({
         status:0,
@@ -150,7 +152,7 @@ router.post('/editCheckAll',function(req,res,next){
         response.cartList.forEach(item => {
           item.checked = checked
         })
-        response.save().exec()
+        response.save()
           .then(response1 => {
             if(response1){
               res.json({
@@ -201,7 +203,9 @@ router.post('/setDefault',function(req,res,next){
           item.isDefault = false
         }
       })
-      response.save().exec().then(response1 => {
+      
+      response.save()
+      .then(response1 => {
         if(response1){
           res.json({
             status:0,
@@ -245,6 +249,64 @@ router.post('/delAddress',function(req,res,next){
   })
   .catch((err) => {
     console.log(err);
+  })
+})
+
+//创建订单
+router.post('/payMent',function(req,res,next){
+  let userId = req.cookies.userId
+  let orderTotal = req.body.orderTotal
+  let addressId = req.body.addressId
+  let address = ''
+  let goodsList = []
+  User.findOne({userId:userId}).exec().then(response => {
+    if(response){
+      //地址
+      
+      response.addressList.forEach(item => {
+        if(item.addressId = addressId){
+          address = item
+        }
+      })
+      //购买商品
+      response.cartList.forEach(item => {
+        if(item.checked == 1){
+          goodsList.push(item)
+        }
+      })
+      let platForm = '622'
+      let r1 = Math.floor(Math.random()*10)
+      let r2 = Math.floor(Math.random()*10)
+      let sysDate = new Date().Format('yyyyMMddhhmmss')
+      let createDate = new Date().Format('yyyy-MM-dd hh:mm:ss')
+      let orderId = platForm + r1 + sysDate + r2
+      let order = {
+        orderId:orderId,
+        orderTotal:orderTotal,
+        addressInfo:address,
+        goodsList:goodsList,
+        orderStatus:1,
+        createDate:createDate
+      }
+      response.orderList.push(order)
+    
+      response.save().then(response1 => {
+        if(response1){
+          res.json({
+            status:0,
+            result:{
+              orderId:order.orderId,
+              orderTotal:order.orderTotal
+            }
+          })
+        }else{
+          res.json({
+            status:1,
+            result:'fail'
+          })
+        }
+      })
+    }
   })
 })
 module.exports = router;
