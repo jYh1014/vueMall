@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread>
-      <span>Order Confirm</span>
+      <span slot="bread">Order Confirm</span>
     </nav-bread>
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <defs>
@@ -55,31 +55,31 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li >
+              <li v-for="(item,index) in cartList" :key="index" v-if="item.checked == 1">
                 <div class="cart-tab-1">
                   <div class="cart-item-pic">
-                    <img >
+                    <img :src="'/static/'+item.productImage" :alt="item.productName">
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name">1</div>
+                    <div class="item-name">{{item.productName}}</div>
 
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">2</div>
+                  <div class="item-price">{{item.salePrice }}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self">
                       <div class="select-self-area">
-                        <span class="select-ipt">×3</span>
+                        <span class="select-ipt">×{{item.productNum}}</span>
                       </div>
                     </div>
                     <div class="item-stock item-stock-no">In Stock</div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">33</div>
+                  <div class="item-price-total">{{item.productNum*item.salePrice | currency('¥')}}</div>
                 </div>
               </li>
             </ul>
@@ -92,23 +92,23 @@
             <ul>
               <li>
                 <span>Item subtotal:</span>
-                <span></span>
+                <span>{{subTotal | currency('¥')}}</span>
               </li>
               <li>
                 <span>Shipping:</span>
-                <span></span>
+                <span>{{shipping | currency('¥')}}</span>
               </li>
               <li>
                 <span>Discount:</span>
-                <span></span>
+                <span>{{discount | currency('¥')}}</span>
               </li>
               <li>
                 <span>Tax:</span>
-                <span></span>
+                <span>{{tax | currency('¥')}}</span>
               </li>
               <li class="order-total-price">
                 <span>Order total:</span>
-                <span></span>
+                <span>{{orderTotal | currency('¥')}}</span>
               </li>
             </ul>
           </div>
@@ -133,14 +133,20 @@
   import NavBread from './../components/NavBread'
   import {currency} from './../util/currency'
   import axios from 'axios'
+
   export default{
       data(){
           return{
-              
+              cartList:[],
+              shipping:10,
+              tax:10,
+              discount:10,
+              subTotal:0,
+              orderTotal:0
           }
       },
       mounted(){
-          
+          this.init()
       },
       components:{
         NavHeader,
@@ -151,7 +157,19 @@
         
       },
       methods:{
-
+          init(){
+              axios.get('/users/cartList').then(res => {
+                  if(res.data.status == 0){
+                      this.cartList = res.data.result
+                      this.cartList.forEach(item => {
+                          if(item.checked == 1){
+                              this.subTotal += item.salePrice*item.productNum
+                          }
+                      });
+                      this.orderTotal = this.subTotal + this.shipping + this.tax - this.discount
+                  }
+              })
+          }
       }
   }
 </script>
