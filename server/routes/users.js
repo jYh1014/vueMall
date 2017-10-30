@@ -309,4 +309,40 @@ router.post('/payMent',function(req,res,next){
     }
   })
 })
+
+//查询用户订单信息
+router.get('/detailOrder',function(req,res,next){
+  let userId = req.cookies.userId
+  let orderId = req.param('orderId')
+  console.log(orderId)
+  let orderTotal = 0
+  User.findOne({userId:userId}).exec().then(response => {
+    if(response ){
+      
+      response.orderList.forEach(item => {
+        if(item.orderId == orderId){
+          orderTotal = item.orderTotal
+        }
+      })
+      console.log(orderTotal)
+      response.save().then(response1 => {
+        if(response1){
+          res.json({
+            status:0,
+            result:{
+              orderId:orderId,
+              orderTotal:orderTotal
+            }
+          })
+        }
+      })
+      
+    }else{
+      res.json({
+        status:1,
+        result:'无订单'
+      })
+    }
+  })
+})
 module.exports = router;

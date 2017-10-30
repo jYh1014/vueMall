@@ -155,7 +155,9 @@
           }
       },
       mounted(){
+        
          this.init()
+         
       },
       computed:{
           addressListFilter(){
@@ -173,8 +175,11 @@
               axios.get('/users/addressList').then(res => {
                   if(res.data.status == 0){
                       this.addressList = res.data.result
+                      console.log(this.addressList)
+                      this.selectedAddrId = this.addressList[0].addressId
                   }
               })
+              console.log(this.selectedAddrId)
           },
           expand(){
               if(this.limit == 3){
@@ -184,6 +189,7 @@
               }
           },
           setDefault(addressId){
+            console.log(addressId)
               axios.post('/users/setDefault',{addressId:addressId}).then(res => {
                   if(res.data.status == 0){
                       this.init()

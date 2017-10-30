@@ -172,6 +172,7 @@
           },
           payMent(){
             let addressId = this.$route.query.addressId
+            
             axios.post('/users/payMent',{orderTotal:this.orderTotal,addressId:addressId}).then(res => {
               if(res.data.status == 0){
                 this.$router.push({path:'/orderSuccess?orderId='+res.data.result.orderId})
