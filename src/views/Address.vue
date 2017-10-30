@@ -67,7 +67,7 @@
                       <dd class="tel">{{item.tel}}</dd>
                     </dl>
                     <div class="addr-opration addr-del">
-                      <a href="javascript:;" class="addr-del-btn" >
+                      <a href="javascript:;" class="addr-del-btn" @click="delAddressConfirm(item.addressId)">
                         <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                       </a>
                     </div>
@@ -121,13 +121,13 @@
           </div>
         </div>
       </div>
-      <modal >
+      <modal :mdShow="isMdShow" @close="closeModal">
         <p slot="message">
           您是否确认要删除此地址?
         </p>
         <div slot="btnGroup">
-            <a class="btn btn--m" href="javascript:;" >确认</a>
-            <a class="btn btn--m btn--red" href="javascript:;" >取消</a>
+            <a class="btn btn--m" href="javascript:;" @click="delAddress">确认</a>
+            <a class="btn btn--m btn--red" href="javascript:;" @click="isMdShow = false">取消</a>
         </div>
       </modal>
       <nav-footer></nav-footer>
@@ -147,7 +147,9 @@
           return{
               addressList:[],
               limit:3,
-              checkIndex:0
+              checkIndex:0,
+              isMdShow:false,
+              addressId:''
           }
       },
       mounted(){
@@ -182,6 +184,22 @@
           setDefault(addressId){
               axios.post('/users/setDefault',{addressId:addressId}).then(res => {
                   if(res.data.status == 0){
+                      this.init()
+                  }
+              })
+          },
+          closeModal(){
+              this.isMdShow = false
+          },
+          delAddressConfirm(addressId){
+              this.addressId = addressId
+              this.isMdShow = true
+          },
+          delAddress(){
+              
+              axios.post('/users/delAddress',{addressId:this.addressId}).then(res => {
+                  if(res.data.status == 0){
+                      this.isMdShow = false
                       this.init()
                   }
               })
