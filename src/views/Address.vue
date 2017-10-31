@@ -76,7 +76,7 @@
                     </div>
                     <div class="addr-opration addr-default" v-if="item.isDefault">Default address</div>
                   </li>
-                  <li class="addr-new">
+                  <li class="addr-new" @click="addAddress">
                     <div class="add-new-inner">
                       <i class="icon-add">
                         <svg class="icon icon-add"><use xlink:href="#icon-add"></use></svg>
@@ -175,11 +175,11 @@
               axios.get('/users/addressList').then(res => {
                   if(res.data.status == 0){
                       this.addressList = res.data.result
-                      console.log(this.addressList)
+                      
                       this.selectedAddrId = this.addressList[0].addressId
                   }
               })
-              console.log(this.selectedAddrId)
+              
           },
           expand(){
               if(this.limit == 3){
@@ -189,7 +189,6 @@
               }
           },
           setDefault(addressId){
-            console.log(addressId)
               axios.post('/users/setDefault',{addressId:addressId}).then(res => {
                   if(res.data.status == 0){
                       this.init()
@@ -211,6 +210,9 @@
                       this.init()
                   }
               })
+          },
+          addAddress(){
+            
           }
       }
   }

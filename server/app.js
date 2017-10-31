@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //拦截用户未登录
 app.use(function(req,res,next){
-  console.log(req.cookies.userId)
+  
   if(req.cookies.userId){
     
     next()

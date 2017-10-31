@@ -6,6 +6,7 @@ import router from './router'
 import vueLazyLoad from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
 import {currency} from './util/currency'
+import store from '../src/store/index'
 Vue.use(infiniteScroll)
 Vue.filter('currency',currency)
 Vue.config.productionTip = false
@@ -16,6 +17,7 @@ Vue.use(vueLazyLoad,{
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

@@ -189,6 +189,8 @@ router.get('/addressList',function(req,res,next){
     console.log(err);
   })
 })
+//增加地址
+
 
 //设置默认地址
 router.post('/setDefault',function(req,res,next){
@@ -314,7 +316,6 @@ router.post('/payMent',function(req,res,next){
 router.get('/detailOrder',function(req,res,next){
   let userId = req.cookies.userId
   let orderId = req.param('orderId')
-  console.log(orderId)
   let orderTotal = 0
   User.findOne({userId:userId}).exec().then(response => {
     if(response ){
@@ -324,7 +325,7 @@ router.get('/detailOrder',function(req,res,next){
           orderTotal = item.orderTotal
         }
       })
-      console.log(orderTotal)
+    
       response.save().then(response1 => {
         if(response1){
           res.json({
