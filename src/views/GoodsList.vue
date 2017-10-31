@@ -167,6 +167,8 @@ export default {
           
           if(res.data.status == 0){
             this.mdShowCart = true
+            
+            this.$store.dispatch('updateCartCount',{cartCount:1})
           }else{
             this.mdShow = true
           }

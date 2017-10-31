@@ -346,4 +346,22 @@ router.get('/detailOrder',function(req,res,next){
     }
   })
 })
+
+//获取购物车商品数量
+router.get('/getCartCount',function(req,res,next){
+  let userId = req.cookies.userId
+  let cartCount = 0
+  User.findOne({userId:userId}).exec().then(response => {
+    if(response){
+      
+      response.cartList.forEach(item => {
+        cartCount += parseInt(item.productNum)
+      })
+      res.json({
+        status:0,
+        result:cartCount
+      })
+    }
+  })
+})
 module.exports = router;

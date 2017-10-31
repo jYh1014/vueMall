@@ -28,12 +28,12 @@
             </div>
             <div class="navbar-right-container" style="display: flex;">
               <div class="navbar-menu-container">
-                <span class="navbar-link" v-if="nickName">{{this.nickName}}</span>
+                <span class="navbar-link" v-if="nickName">{{nickName}}</span>
                 <a href="javascript:void(0)" class="navbar-link"  @click="loginModalFlag=true" v-if="!nickName">Login</a>
                 <a href="javascript:void(0)" class="navbar-link"  @click="logout" v-if="nickName">Login out</a>
                 <!-- <a href="javascript:void(0)" class="navbar-link" >Logout</a> -->
                 <div class="navbar-cart-container">
-                  <span class="navbar-cart-count" ></span>
+                  <span class="navbar-cart-count" v-if="cartCount>0">{{cartCount}}</span>
                   <a class="navbar-link navbar-cart-link" href="/#/cart">
                     <svg class="navbar-cart-logo">
                       <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -150,6 +150,7 @@
 </style>
 <script>
     import axios from "axios"
+    import {mapState} from 'vuex'
     export default{
         data(){
             return{
@@ -157,15 +158,27 @@
               userName:'',
               userPwd:'',
               loginModalFlag:false,
-              nickName:''
+              // nickName:''
             }
         },
         mounted(){
           this.checkLogin()
         },
+        computed:{
+          ...mapState({
+            nickName: state => state.user.nickName,
+            cartCount: state => state.user.cartCount
+          })
+          // nickName(){
+          //   return this.$store.state.user.nickName
+          // },
+          // cartCount(){
+          //   return this.$store.state.user.cartCount
+          // }
+        },
         methods:{
           login(){
-            console.log(this.userName)
+            
             if(!this.userName || !this.userPwd){
               this.errorTip = true
               return
@@ -173,11 +186,13 @@
             axios.post('/users/login',{
               userName:this.userName,userPwd:this.userPwd
             }).then(res => {
-              console.log(res)
+              
               if(res.data.status == 0){
                 this.loginModalFlag = false
                 this.errorTip = false
-                this.nickName = res.data.result.userName
+                this.getCartCount()
+                this.$store.dispatch('updateUserInfo',{nickName:res.data.result.userName})
+                // this.nickName = res.data.result.userName
               }else{
                 this.errorTip = true
               }
@@ -186,7 +201,9 @@
           logout(){
             axios.post('/users/logout').then(res => {
               if(res.data.status == 0){
-                this.nickName = ''
+                this.getCartCount()
+                // this.nickName = ''
+                this.$store.dispatch('updateUserInfo',{nickName:''})
               }
               
             })
@@ -194,7 +211,16 @@
           checkLogin(){
             axios.get('/users/checkLogin').then(res => {
               if(res.data.status == 0){
-                this.nickName = res.data.result
+                this.getCartCount()
+                // this.nickName = res.data.result
+                this.$store.dispatch('updateUserInfo',{nickName:res.data.result})
+              }
+            })
+          },
+          getCartCount(){
+            axios.get('/users/getCartCount').then(res => {
+              if(res.data.status == 0){
+                this.$store.dispatch('initCartCount',{cartCount:res.data.result})
               }
             })
           }

@@ -95,6 +95,7 @@ router.post('/addCart',function(req,res,next){
                 })
                 if(goodsItem){
                     response.save().then(result => {
+                        
                         if(!result){
                             res.json({
                                 status:'1',
@@ -103,9 +104,9 @@ router.post('/addCart',function(req,res,next){
                         }else{
                             res.json({
                                 status:'0',
-                                msg:'',
+                                
                                 result:{
-                                    count:result.length,
+                                    
                                     list:result
                                 }
                             })
@@ -128,9 +129,9 @@ router.post('/addCart',function(req,res,next){
                                 }else{
                                     res.json({
                                         status:'0',
-                                        msg:'',
+                                       
                                         result:{
-                                            count:response1.length,
+                                            
                                             list:response1
                                         }
                                     })

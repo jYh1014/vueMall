@@ -94,7 +94,7 @@
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item.productId)">
+                    <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -177,8 +177,8 @@
             return{
                 cartList:[],
                 modalConfirm:false,
-                productId:''
-                
+                productId:'',
+                delItem:''
             }
         },
         mounted(){
@@ -223,16 +223,17 @@
               })
             },
             delCart(){
-              axios.post('/users/cartDel',{productId:this.productId}).then(response => {
+              axios.post('/users/cartDel',{productId:this.delItem.productId}).then(response => {
                 if(response.data.status == 0){
                   this.modalConfirm = false
                   this.init()
+                  this.$store.dispatch('updateCartCount',{cartCount:-this.delItem.productNum})
                 }
               })
             },
-            delCartConfirm(productId){
+            delCartConfirm(item){
               this.modalConfirm = true
-              this.productId = productId
+              this.delItem = item
             },
             closeModal(){
               this.modalConfirm = false
@@ -251,7 +252,13 @@
               axios.post('/users/cartEdit',{
                 productId:item.productId,productNum:item.productNum,checked:item.checked
               }).then(response => {
-
+                let num = 0
+                if(flag == 'add'){
+                  num = 1
+                }else if(flag == 'minus'){
+                  num = -1
+                }
+                this.$store.dispatch('updateCartCount',{cartCount:num})
               })
             },
             toggleCheckAll(){
