@@ -1,6 +1,6 @@
 # vuemall
 
-> A Vue.js project
+> 一个前后端一体的商场系统 用到的技术栈有 vue 、vuex、mongoose、node、webpack、
 
 ## Build Setup
 
@@ -10,6 +10,9 @@ npm install
 
 # serve with hot reload at localhost:8080
 npm run dev
+
+# start server
+npm run server
 
 # build for production with minification
 npm run build
