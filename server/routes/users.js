@@ -364,4 +364,37 @@ router.get('/getCartCount',function(req,res,next){
     }
   })
 })
+
+//新增地址
+router.post('/addAddress',function(req,res,next){
+  let userId = req.cookies.userId
+  let addressInfo = req.body.addressInfo
+  let r1 = Math.floor(Math.random()*10)
+  let r2 = Math.floor(Math.random()*10)
+  // let sysDate = new Date().Format('yyyyMMddhhmmss')
+  let createDate = new Date().Format('hhmmss')
+  let addressId = r1 + createDate + r2
+  addressInfo.addressId = addressId
+  addressInfo.isDefault = false
+  console.log(addressInfo)
+  User.findOne({userId:userId}).exec().then(response => {
+    if(response){
+      response.addressList.push(addressInfo)
+      response.save().then(response1 => {
+        // console.log(response1)
+        res.json({
+          status:0,
+          result:addressInfo
+        })
+      })
+    }
+    else{
+      res.json({
+        status:1,
+        result:''
+      })
+    }
+  })
+  
+})
 module.exports = router;

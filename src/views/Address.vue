@@ -130,10 +130,36 @@
             <a class="btn btn--m btn--red" href="javascript:;" @click="isMdShow = false">取消</a>
         </div>
       </modal>
+      <modal :mdShow="isAddMdShow" @close="closeModal">
+        <div slot="message">
+          <form @submit.prevent="submit" class="formModal">
+            <p><span>姓名：</span><input type="text" name="name" v-model="addressInfo.userName"></p>
+            <p><span>地址：</span><input type="text" name="address" v-model="addressInfo.streetName"></p>
+            <p><span>电话：</span><input type="text" name="address" v-model="addressInfo.tel"></p>
+            <p><span>邮编：</span><input type="text" name="address" v-model="addressInfo.postCode"></p>
+            <input type="submit" value="提交" class="btn btn--m">
+            <a class="btn btn--m btn--red" href="javascript:;" @click="isAddMdShow = false">取消</a>
+          </form>
+        </div>
+        <div slot="btnGroup">
+            
+            
+        </div>
+      </modal>
       <nav-footer></nav-footer>
     </div>
 </template>
 <style>
+  .formModal p{
+    margin-bottom: 10px
+  }
+  .formModal p input{
+    width: 70%;
+    border-radius: 4px
+  }
+  .formModal a.btn--red{
+    border-radius: 4px
+  }
 </style>
 <script>
   import NavHeader from './../components/NavHeader'
@@ -151,7 +177,14 @@
               checkIndex:0,
               isMdShow:false,
               addressId:'',
-              selectedAddrId:''
+              selectedAddrId:'',
+              isAddMdShow:false,
+              addressInfo:{
+                userName:'',
+                streetName:'',
+                postCode:'',
+                tel:''
+              }
           }
       },
       mounted(){
@@ -175,8 +208,10 @@
               axios.get('/users/addressList').then(res => {
                   if(res.data.status == 0){
                       this.addressList = res.data.result
+                      if(this.addressList.length > 0){
+                        this.selectedAddrId = this.addressList[0].addressId
+                      }               
                       
-                      this.selectedAddrId = this.addressList[0].addressId
                   }
               })
               
@@ -197,6 +232,7 @@
           },
           closeModal(){
               this.isMdShow = false
+              this.isAddMdShow = false
           },
           delAddressConfirm(addressId){
               this.addressId = addressId
@@ -212,7 +248,16 @@
               })
           },
           addAddress(){
-            
+            this.isAddMdShow = true
+          },
+          submit(){
+            this.isAddMdShow = false
+            // console.log(this.addressInfo)
+            axios.post('/users/addAddress',{addressInfo:this.addressInfo}).then(res => {
+              if(res.data.status == 0){
+                this.init()
+              }
+            })
           }
       }
   }

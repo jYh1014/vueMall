@@ -20,7 +20,7 @@ var userSchema = mongoose.Schema({
             "userName" : String,
             "streetName" : String,
             "postCode" : Number,
-            "tel" : Number,
+            "tel" : String,
             "isDefault" : Boolean
         }
     ]
