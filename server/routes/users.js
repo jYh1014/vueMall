@@ -1,5 +1,6 @@
 var express = require('express');
 let mongoose = require('mongoose')
+let _ = require('lodash')
 mongoose.Promise = require('bluebird')
 require('../util/util')
 var router = express.Router();
@@ -375,8 +376,8 @@ router.post('/addAddress',function(req,res,next){
   let createDate = new Date().Format('hhmmss')
   let addressId = r1 + createDate + r2
   addressInfo.addressId = addressId
-  addressInfo.isDefault = false
-  console.log(addressInfo)
+  // addressInfo.isDefault = false
+  // console.log(addressInfo)
   User.findOne({userId:userId}).exec().then(response => {
     if(response){
       response.addressList.push(addressInfo)
@@ -396,5 +397,33 @@ router.post('/addAddress',function(req,res,next){
     }
   })
   
+})
+
+//编辑地址
+router.post('/editAddress',function(req,res,next){
+  let userId = req.cookies.userId
+  let addressId = req.body.addressId
+  let addressInfo = req.body.addressInfo
+  User.findOne({userId:userId}).exec().then(response => {
+    if(response){
+      response.addressList.forEach(item => {
+        if(item.addressId == addressId){
+          for(var key in addressInfo){
+            item[key] = addressInfo[key]
+          }
+         
+        }
+      })
+      response.save().then(response1 => {
+        if(response1){
+          res.json({
+            status:0,
+            result:response1
+          })
+        }
+      })
+    }
+
+  })
 })
 module.exports = router;

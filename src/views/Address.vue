@@ -66,6 +66,11 @@
                       <dd class="address">{{item.streetName}}</dd>
                       <dd class="tel">{{item.tel}}</dd>
                     </dl>
+                    <div class="addr-opration addr-editor" @click="editAddressConfirm('edit',item.addressId)">
+                      <a href="javascript:;" class="addr-del-btn" >
+                        <svg class="icon icon-edit"><use xlink:href="#icon-edit"></use></svg>
+                      </a>
+                    </div>
                     <div class="addr-opration addr-del">
                       <a href="javascript:;" class="addr-del-btn" @click="delAddressConfirm(item.addressId)">
                         <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
@@ -76,7 +81,7 @@
                     </div>
                     <div class="addr-opration addr-default" v-if="item.isDefault">Default address</div>
                   </li>
-                  <li class="addr-new" @click="addAddress">
+                  <li class="addr-new" @click="addAddress('add')">
                     <div class="add-new-inner">
                       <i class="icon-add">
                         <svg class="icon icon-add"><use xlink:href="#icon-add"></use></svg>
@@ -160,6 +165,12 @@
   .formModal a.btn--red{
     border-radius: 4px
   }
+  .addr-list ul li .addr-opration.addr-editor{
+    bottom: 17px;
+    right: 55px;
+    width: 20px;
+    height: 20px;
+  }
 </style>
 <script>
   import NavHeader from './../components/NavHeader'
@@ -178,12 +189,15 @@
               isMdShow:false,
               addressId:'',
               selectedAddrId:'',
+              flag:'',
               isAddMdShow:false,
               addressInfo:{
                 userName:'',
                 streetName:'',
                 postCode:'',
-                tel:''
+                tel:'',
+                addressId:'',
+                isDefault:false
               }
           }
       },
@@ -237,6 +251,29 @@
           delAddressConfirm(addressId){
               this.addressId = addressId
               this.isMdShow = true
+              
+          },
+          editAddressConfirm(flag,addressId){
+            this.addressId = addressId
+            this.isAddMdShow = true
+            this.flag = 'edit'
+            axios.get('/users/addressList').then(res => {
+              if(res.data.status == 0){
+                let addressList = res.data.result
+                addressList.forEach(item => {
+                  if(item.addressId == addressId){
+                    this.addressInfo = {
+                      userName:item.userName,
+                      streetName:item.streetName,
+                      postCode:item.postCode,
+                      tel:item.tel,
+                      addressId:item.addressId,
+                      isDefault:false
+                    }
+                  }
+                })
+              }
+            })
           },
           delAddress(){
               
@@ -249,15 +286,24 @@
           },
           addAddress(){
             this.isAddMdShow = true
+            this.flag = 'add'
           },
           submit(){
             this.isAddMdShow = false
-            // console.log(this.addressInfo)
-            axios.post('/users/addAddress',{addressInfo:this.addressInfo}).then(res => {
+            if(this.flag == 'add'){
+              axios.post('/users/addAddress',{addressInfo:this.addressInfo}).then(res => {
               if(res.data.status == 0){
                 this.init()
               }
             })
+            }else if(this.flag == 'edit'){
+              axios.post('/users/editAddress',{addressId:this.addressId,addressInfo:this.addressInfo}).then(res => {
+                if(res.data.status == 0){
+                  this.init()
+                }
+              })
+            }
+            
           }
       }
   }

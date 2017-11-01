@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "server":"node server/bin/www",
+    "server": "node server/bin/www",
     "start": "npm run dev",
     "build": "node build/build.js"
   },
@@ -14,6 +14,7 @@
     "axios": "^0.17.0",
     "bluebird": "^3.5.1",
     "ejs": "^2.5.7",
+    "lodash": "^4.17.4",
     "mongoose": "^4.12.4",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
