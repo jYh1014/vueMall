@@ -1,6 +1,6 @@
 # vuemall
 
-> 一个前后端一体的商场系统 用到的技术栈有 vue 、vuex、mongoose、node、webpack、
+> 一个前后端一体的商场系统 用到的技术栈有 vue 、vuex、axios、vue-router、mongoose、node、webpack、
 
 ## Build Setup
 
