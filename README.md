@@ -1,6 +1,8 @@
 # vuemall
 
 > 一个前后端一体的商场系统 用到的技术栈有 vue 、vuex、axios、vue-router、mongoose、node、webpack、
+> 上线地址 47.93.30.123:3000
+
 
 ## Build Setup
 
