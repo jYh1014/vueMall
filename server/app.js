@@ -4,14 +4,31 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var mongoose = require('mongoose')
+mongoose.Promise = require('bluebird')
 var index = require('./routes/index');
 var users = require('./routes/users');
 var goods = require('./routes/goods');
 var ejs = require('ejs')
 
 var app = express();
+var dbUrl = 'mongodb://vue_mall_runner:18210385076@127.0.0.1:27017/db_mall'
+var env = process.env.NODE_ENV || 'development'
+if(env === 'development'){
+  dbUrl = 'mongodb://localhost/db_mall'
+}
+mongoose.connect(dbUrl)
+mongoose.connection.on('connected',function(){
+    console.log('connect success')
+})
 
+mongoose.connection.on('disconnected',function(){
+    console.log('disconnect')
+})
+
+mongoose.connection.on('error',function(){
+    console.log('connect fail')
+})
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 // app.engine('.html',ejs.__express)
