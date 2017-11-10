@@ -29,6 +29,7 @@
             <div class="navbar-right-container" style="display: flex;">
               <div class="navbar-menu-container">
                 <span class="navbar-link" v-if="nickName">{{nickName}}</span>
+                <a href="javascript:void(0)" class="navbar-link"  @click="signUpModalFlag=true" v-if="!nickName">Sign up</a>
                 <a href="javascript:void(0)" class="navbar-link"  @click="loginModalFlag=true" v-if="!nickName">Login</a>
                 <a href="javascript:void(0)" class="navbar-link"  @click="logout" v-if="nickName">Login out</a>
                 <!-- <a href="javascript:void(0)" class="navbar-link" >Logout</a> -->
@@ -43,7 +44,7 @@
               </div>
             </div>
         </div>
-      <div class="md-modal modal-msg md-modal-transition " :class="{'md-show':loginModalFlag}">
+        <div class="md-modal modal-msg md-modal-transition " :class="{'md-show':loginModalFlag}">
           <div class="md-modal-inner">
             <div class="md-top">
               
@@ -73,7 +74,37 @@
             </div>
           </div>
         </div>
-        <div class="md-overlay" v-if="loginModalFlag"></div>
+        <div class="md-modal modal-msg md-modal-transition " :class="{'md-show':signUpModalFlag}">
+          <div class="md-modal-inner">
+            <div class="md-top">
+              
+              <div class="md-title" >Sign up</div>
+              
+              <button class="md-close" @click="signUpModalFlag=false">Close</button>
+            </div>
+            <div class="md-content">
+              <div class="confirm-tips">
+                <div class="error-wrap">
+                  <!-- <span class="error error-show" v-show="errorTip">用户名或者密码错误</span> -->
+                </div>
+                <ul>
+                  <li class="regi_form_input">
+                    <i class="icon IconPeople"></i>
+                    <input type="text" tabindex="1" name="loginname" v-model="userInfo.userName" class="regi_login_input regi_login_input_left" placeholder="User Name" >
+                  </li>
+                  <li class="regi_form_input noMargin">
+                    <i class="icon IconPwd"></i>
+                    <input type="password" tabindex="2"  name="password" v-model="userInfo.userPwd" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="Password" @keyup.enter="login">
+                  </li>
+                </ul>
+              </div>
+              <div class="login-wrap">
+                <a href="javascript:;" class="btn-login" @click="signUp">注  册</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="md-overlay" v-if="loginModalFlag||signUpModalFlag"></div>
     </header>
 </template>
 <style>
@@ -158,7 +189,11 @@
               userName:'',
               userPwd:'',
               loginModalFlag:false,
-              // nickName:''
+              signUpModalFlag:false,
+              userInfo:{
+                userName:'',
+                userPwd:''
+              }
             }
         },
         mounted(){
@@ -195,6 +230,15 @@
                 // this.nickName = res.data.result.userName
               }else{
                 this.errorTip = true
+              }
+            })
+          },
+          signUp(){
+            console.log(this.userInfo)
+            axios.post('/users/signUp',{userInfo:this.userInfo}).then(res => {
+              if(res.data.status == 0){
+                this.signUpModalFlag = false
+                // this.getCartCount()
               }
             })
           },

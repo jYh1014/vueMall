@@ -291,7 +291,9 @@
           submit(){
             this.isAddMdShow = false
             if(this.flag == 'add'){
+              // console.log(this.addressInfo)
               axios.post('/users/addAddress',{addressInfo:this.addressInfo}).then(res => {
+                console.log(res)
               if(res.data.status == 0){
                 this.init()
               }

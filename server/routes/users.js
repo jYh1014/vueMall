@@ -11,6 +11,7 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+//登录
 router.post('/login',function(req,res,next){
   let userName = req.body.userName
   let userPwd = req.body.userPwd
@@ -44,6 +45,31 @@ router.post('/login',function(req,res,next){
         }
       })
 })
+
+//注册
+router.post("/signUp",function(req,res,next){
+  
+  let userInfo = req.body.userInfo
+  userInfo.orderList = []
+  userInfo.cartList = []
+  userInfo.addressList = []
+  let r1 = Math.floor(Math.random()*10)
+  let r2 = Math.floor(Math.random()*10)
+  let createDate = new Date().Format('hhmmss')
+  let userId = r1 + createDate + r2
+  userInfo.userId = userId
+  // User.find({}).exec()
+  User.create(userInfo).then(response => {
+    if(response){
+      res.json({
+        status:0,
+        result:''
+      })
+    }
+    
+  })
+})
+
 router.post("/logout",function(req,res,next){
   res.cookie("userId","",{
     path:'/',
