@@ -2,14 +2,14 @@
   <div >
     <nav-header></nav-header>
     <nav-bread>
-        <span slot="bread">Goods</span>
+        <span slot="bread">{{$t('lang.goods')}}</span>
     </nav-bread>
           <div class="accessory-result-page accessory-page">
         <div class="container">
           <div class="filter-nav">
-            <span class="sortby">Sort by:</span>
-            <a href="javascript:void(0)" class="default cur">Default</a>
-            <a href="javascript:void(0)" class="price" @click="sortGoods">Price 
+            <span class="sortby">{{$t('lang.sort')}}</span>
+            <a href="javascript:void(0)" class="default cur">{{$t('lang.default')}}</a>
+            <a href="javascript:void(0)" class="price" @click="sortGoods">{{$t('lang.price')}}
               <svg class="icon icon-arrow-short" :class="{'sort-up':sortflag}"><use xlink:href="#icon-arrow-short"></use></svg>
             </a>
             <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
@@ -18,8 +18,8 @@
             <!-- filter -->
             <div class="filter stopPop" id="filter" v-bind:class="{'filterby-show':filterby}">
               <dl class="filter-price">
-                <dt>Price:</dt>
-                <dd><a href="javascript:void(0)" :class="{cur:priceChecked === 'all'}" @click="setPriceFilter('all')">All</a></dd>
+                <dt>{{$t('lang.price')}}</dt>
+                <dd><a href="javascript:void(0)" :class="{cur:priceChecked === 'all'}" @click="setPriceFilter('all')">{{$t('lang.all')}}</a></dd>
                 <dd v-for="(item,index) in priceFilter"  :key="index">
                   <a href="javascript:void(0)" @click="setPriceFilter(index)" :class="{cur:priceChecked === index}">{{item.startPrice}} - {{item.endPrice}}</a>
                 </dd>
@@ -86,6 +86,7 @@ import NavFooter from '../components/NavFooter'
 import NavBread from '../components/NavBread'
 import Modal from '../components/Modal'
 import axios from 'axios'
+import {mapState} from 'vuex'
 export default {
   name: 'GoodsList',
   data(){
@@ -124,6 +125,11 @@ export default {
   components:{
       NavHeader,NavFooter,NavBread,Modal
   },
+  computed:{
+    ...mapState({
+        lang: state => state.user.lang
+      })
+  },
   mounted(){
       this.getGoodsList()
   },
@@ -134,7 +140,8 @@ export default {
           page:this.page,
           pageSize:this.pageSize,
           sort:this.sortflag?1:-1,
-          priceLevel:this.priceChecked
+          priceLevel:this.priceChecked,
+          lang:this.lang
         }
         this.loading = true
           axios.get('/goods/list',{
@@ -145,6 +152,7 @@ export default {
             if(res.data.status == '0'){
               if(flag){
                 this.goodsList = this.goodsList.concat(res.data.result.list)
+                console.log(this.goodsList)
                 if(res.data.result.count < this.pageSize){
                   this.busy = true
                 }else{
@@ -153,6 +161,10 @@ export default {
                 
               }else{
                 this.goodsList = res.data.result.list
+                console.log(this.goodsList)
+                this.goodsList.map((item,index) => {
+                 
+                })
                 this.busy = false
               }
               

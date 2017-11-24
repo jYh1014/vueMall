@@ -29,8 +29,8 @@
             <div class="navbar-right-container" style="display: flex;">
               <div class="navbar-menu-container">
                 <span class="navbar-link" v-if="nickName">{{nickName}}</span>
-                <a href="javascript:void(0)" class="navbar-link"  @click="signUpModalFlag=true" v-if="!nickName">Sign up</a>
-                <a href="javascript:void(0)" class="navbar-link"  @click="loginModalFlag=true" v-if="!nickName">Login</a>
+                <a href="javascript:void(0)" class="navbar-link"  @click="signUpModalFlag=true" v-if="!nickName">{{$t('lang.signUp')}}</a>
+                <a href="javascript:void(0)" class="navbar-link"  @click="loginModalFlag=true" v-if="!nickName">{{$t('lang.login')}}</a>
                 <a href="javascript:void(0)" class="navbar-link"  @click="logout" v-if="nickName">Login out</a>
                 <!-- <a href="javascript:void(0)" class="navbar-link" >Logout</a> -->
                 <div class="navbar-cart-container">
@@ -202,7 +202,8 @@
         computed:{
           ...mapState({
             nickName: state => state.user.nickName,
-            cartCount: state => state.user.cartCount
+            cartCount: state => state.user.cartCount,
+            lang: state => state.user.lang
           })
           // nickName(){
           //   return this.$store.state.user.nickName

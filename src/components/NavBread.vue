@@ -3,7 +3,7 @@
         <div class="bread-wrap">
             <nav class="">
                 <a href="/">
-                    Home
+                    {{$t('lang.home')}}
                 </a>
                 <slot name="bread"></slot>
             </nav>

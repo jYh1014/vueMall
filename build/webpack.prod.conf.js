@@ -9,7 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-
+const PrerenderPlugin = require('prerender-spa-plugin')
 const env = config.build.env
 
 const webpackConfig = merge(baseWebpackConfig, {
@@ -37,6 +37,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       sourceMap: true
     }),
+    
     // extract css into its own file
     new ExtractTextPlugin({
       filename: utils.assetsPath('css/[name].[contenthash].css')
@@ -94,7 +95,14 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    
+    //预渲染
+    new PrerenderPlugin(
+      path.join(__dirname,"../dist"),
+      ['/cart']
+
+    ),
   ]
 })
 

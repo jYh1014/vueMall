@@ -2,7 +2,8 @@ import * as types from '../mutation-types'
 
 const state = {
     nickName:'',
-    cartCount:0
+    cartCount:0,
+    lang:'zh'
 }
 
 const mutations = {
@@ -14,6 +15,9 @@ const mutations = {
    },
    [types.INIT_CARTCOUNT](state,{ cartCount }){
     state.cartCount = cartCount
+   },
+   [types.LANGUAGE_IDENTIFY](state,{ lang }){
+       state.lang = lang
    }
 }
 
@@ -26,6 +30,9 @@ const actions = {
     },
     initCartCount({ commit },payload){
         commit(types.INIT_CARTCOUNT,payload)
+    },
+    updateLanguage({ commit },payload){
+        commit(types.LANGUAGE_IDENTIFY,payload)
     }
 }
 

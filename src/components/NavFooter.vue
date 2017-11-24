@@ -5,9 +5,9 @@
         <div class="footer__inner">
           <div class="footer__region">
             <span>Region</span>
-            <select class="footer__region__select">
-              <option value="en-US">USA</option>
-              <option value="zh-CN">China</option>
+            <select class="footer__region__select" @change="changeSelect">
+              <option :value="item" v-for="(item,index) in $t('lang.language')" :key="index">{{item}}</option>
+              <!-- <option value="zh-CN"></option> -->
             </select>
           </div>
           <div class="footer__secondary__nav">
@@ -28,13 +28,27 @@
   </footer>
 </template>
 <script>
+  import {mapState} from 'vuex'
     export default{
         name: 'NavFooter',
         data(){
             return{
-              
+              select: ['zh-CN','en-US']
             }
         },
+        computed:{
+          ...mapState({
+            lang: state => state.user.lang
+          })
+        },
+        methods:{
+          changeSelect(ele){
+            // console.log(ele.target.value)
+            let choose = ele.target.value
+            this.$store.dispatch('updateLanguage',{lang: choose})        
+            this.$i18n.locale = choose
+          }
+        }
         
     }
 </script>
